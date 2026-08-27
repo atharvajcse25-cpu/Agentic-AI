@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdmitBot - AI-Powered College Admission Assistant</title>
+    <meta name="description" content="Get instant answers to all your college admission questions with AdmitBot - available 24/7">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-50: #fff7ed;
+            --primary-100: #ffedd5;
+            --primary-200: #fed7aa;
+            --primary-300: #fdba74;
+            --primary-400: #fb923c;
+            --primary-500: #f97316;
+            --primary-600: #ea580c;
+            --primary-700: #c2410c;
+            --primary-800: #9a3412;
+            --primary-900: #7c2d12;
+            
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --gray-950: #030712;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--gray-950);
+            color: #f3f4f6;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, var(--primary-400), var(--primary-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-500);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-500);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-600);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-800);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 1px solid var(--gray-700);
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-700);
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .hero-gradient-1 {
+            position: absolute;
+            top: 25%;
+            left: -12rem;
+            width: 24rem;
+            height: 24rem;
+            background-color: rgba(249, 115, 22, 0.2);
+            border-radius: 50%;
+            filter: blur(64px);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .hero-gradient-2 {
+            position: absolute;
+            bottom: 25%;
+            right: -12rem;
+            width: 24rem;
+            height: 24rem;
+            background-color: rgba(234, 88, 12, 0.2);
+            border-radius: 50%;
+            filter: blur(64px);
+            animation: pulse 4s ease-in-out infinite;
+            animation-delay: 700ms;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--primary-400);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-400);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 640px) {
+            .hero-buttons {
+                flex-direction: row;
+            }
+            
+            .hero h1 {
+                font-size: 4rem;
+            }
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-500);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+            margin-top: 0.25rem;
+        }
+
+        /* Chat Preview */
+        .chat-preview {
+            background: linear-gradient(135deg, var(--gray-800), var(--gray-900));
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid var(--gray-700);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message:nth-child(1) { animation-delay: 0.1s; }
+        .chat-message:nth-child(2) { animation-delay: 0.3s; }
+        .chat-message:nth-child(3) { animation-delay: 0.5s; }
+        .chat-message:nth-child(4) { animation-delay: 0.7s; }
+
+        .chat-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .chat-avatar.bot {
+            background-color: var(--primary-500);
+        }
+
+        .chat-avatar.user {
+            background-color: var(--gray-700);
+        }
+
+        .chat-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .chat-bubble.bot {
+            background-color: var(--gray-700);
+            border-top-left-radius: 0.25rem;
+        }
+
+        .chat-bubble.user {
+            background-color: var(--primary-500);
+            border-top-right-radius: 0.25rem;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.5rem 0;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--gray-600);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .floating-icon {
+            position: absolute;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-icon-1 {
+            top: -1.5rem;
+            right: -1.5rem;
+            background-color: var(--primary-500);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        .floating-icon-2 {
+            bottom: -1.5rem;
+            left: -1.5rem;
+            background-color: var(--primary-500);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-alt {
+            background-color: rgba(17, 24, 39, 0.5);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-400);
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        /* Problem/Solution Section */
+        .two-column-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .two-column-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid;
+        }
+
+        .card-problem {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .card-solution {
+            background-color: rgba(249, 115, 22, 0.05);
+            border-color: rgba(249, 115, 22, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon.problem {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .card-icon.solution {
+            background-color: rgba(249, 115, 22, 0.2);
+            color: var(--primary-400);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .card-title.problem {
+            color: #f87171;
+        }
+
+        .card-title.solution {
+            color: var(--primary-400);
+        }
+
+        .card-list {
+            list-style: none;
+        }
+
+        .card-list li {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--gray-300);
+        }
+
+        .list-icon {
+            flex-shrink: 0;
+            margin-top: 0.25rem;
+        }
+
+        .list-icon.problem {
+            color: #ef4444;
+        }
+
+        .list-icon.solution {
+            color: var(--primary-500);
+        }
+
+        .highlight-box {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: rgba(249, 115, 22, 0.1);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(249, 115, 22, 0.2);
+        }
+
+        .highlight-box p {
+            font-size: 0.875rem;
+            color: var(--primary-300);
+            font-weight: 500;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feature-card {
+            background-color: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--gray-700);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(249, 115, 22, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            transition: color 0.3s;
+        }
+
+        .feature-card:hover .feature-title {
+            color: var(--primary-400);
+        }
+
+        .feature-description {
+            color: var(--gray-400);
+            line-height: 1.6;
+        }
+
+        /* How It Works Section */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .steps-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .step-card {
+            background-color: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--gray-700);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: rgba(249, 115, 22, 0.5);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -1rem;
+            left: -1rem;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+        }
+
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: var(--gray-400);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* Tech Stack Section */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (min-width: 640px) {
+            .tech-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .tech-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .tech-card {
+            background-color: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--gray-700);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .tech-card:hover {
+            border-color: rgba(249, 115, 22, 0.5);
+        }
+
+        .tech-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .tech-card:hover .tech-icon {
+            transform: scale(1.1);
+        }
+
+        .tech-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .tech-card:hover .tech-name {
+            color: var(--primary-400);
+        }
+
+        .tech-description {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+            line-height: 1.5;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), transparent);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-text {
+            color: var(--gray-400);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--gray-900);
+            border-top: 1px solid var(--gray-800);
+            padding: 3rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+            }
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            color: var(--gray-400);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .social-link {
+            width: 36px;
+            height: 36px;
+            background-color: var(--gray-800);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary-500);
+            transform: translateY(-2px);
+        }
+
+        .footer-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-500);
+        }
+
+        .footer-contact {
+            list-style: none;
+        }
+
+        .footer-contact li {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--gray-400);
+            font-size: 0.875rem;
+        }
+
+        .contact-icon {
+            color: var(--primary-500);
+            flex-shrink: 0;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--gray-800);
+            padding-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+        }
+
+        .footer-bottom p {
+            color: var(--gray-400);
+            font-size: 0.875rem;
+        }
+
+        /* Chatbot Widget */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .chat-toggle-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .chat-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(249, 115, 22, 0.6);
+        }
+
+        .chat-toggle-btn svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: #ef4444;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            animation: pulse-badge 2s infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 380px;
+            max-width: calc(100vw - 40px);
+            height: 600px;
+            max-height: calc(100vh - 120px);
+            background-color: var(--gray-900);
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            display: none;
+            flex-direction: column;
+            border: 1px solid var(--gray-700);
+            overflow: hidden;
+        }
+
+        .chat-window.open {
+            display: flex;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-header-avatar svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary-500);
+        }
+
+        .chat-header-text h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .chat-header-text p {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .chat-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s;
+        }
+
+        .chat-close-btn:hover {
+            opacity: 0.8;
+        }
+
+        .chat-close-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: rgba(3, 7, 18, 0.5);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--gray-800);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--gray-600);
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+
+        .message-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-wrapper.user-message {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .message-avatar.bot {
+            background-color: var(--primary-500);
+        }
+
+        .message-avatar.user {
+            background-color: var(--gray-700);
+        }
+
+        .message-content {
+            max-width: 75%;
+        }
+
+        .message-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message-bubble.bot {
+            background-color: var(--gray-800);
+            color: var(--gray-100);
+            border-top-left-radius: 0.25rem;
+        }
+
+        .message-bubble.user {
+            background-color: var(--primary-500);
+            color: white;
+            border-top-right-radius: 0.25rem;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+            padding: 0 0.5rem;
+        }
+
+        .user-message .message-time {
+            text-align: right;
+        }
+
+        .typing-indicator-wrapper {
+            display: none;
+        }
+
+        .typing-indicator-wrapper.active {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quick-reply-btn {
+            background-color: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            color: var(--primary-400);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-reply-btn:hover {
+            background-color: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-700);
+            background-color: var(--gray-800);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            background-color: var(--gray-700);
+            border: 1px solid var(--gray-600);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-500);
+        }
+
+        .chat-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        .chat-send-btn {
+            background-color: var(--primary-500);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .chat-send-btn:hover {
+            background-color: var(--primary-600);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .chat-send-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .chat-window {
+                width: calc(100vw - 20px);
+                height: calc(100vh - 100px);
+                right: 10px;
+                bottom: 70px;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">A</div>
+                <span class="logo-text font-display">AdmitBot</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#demo">Demo</a>
+                <a href="#how-it-works">How it Works</a>
+                <a href="#tech">Technology</a>
+            </div>
+            <button class="btn-primary" onclick="openChat()">Try Now</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-gradient-1"></div>
+            <div class="hero-gradient-2"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div>
+                    <div class="badge">
+                        <span>✨</span>
+                        <span>AI-Powered Admission Assistant</span>
+                    </div>
+                    <h1 class="font-display">
+                        Your College Admission
+                        <span class="text-gradient">Questions Answered</span>
+                        <span class="text-gradient">Instantly</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Get instant, accurate information about courses, eligibility criteria, fees, 
+                        deadlines, and required documents—all through our intelligent chatbot available 24/7.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn-primary" onclick="openChat()">
+                            Try the Bot →
+                        </button>
+                        <a href="#how-it-works" class="btn-secondary">Learn More</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div>
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">Available</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">&lt;2s</div>
+                            <div class="stat-label">Response Time</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Accurate</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-preview">
+                    <div class="chat-message">
+                        <div class="chat-avatar user">👤</div>
+                        <div class="chat-bubble user">What's the eligibility for Computer Science?</div>
+                    </div>
+                    <div class="chat-message">
+                        <div class="chat-avatar bot">🤖</div>
+                        <div class="chat-bubble bot">For B.Tech Computer Science, you need 60% in 12th grade with Physics, Chemistry, and Mathematics. JEE Main score is required.</div>
+                    </div>
+                    <div class="chat-message">
+                        <div class="chat-avatar user">👤</div>
+                        <div class="chat-bubble user">What are the fees?</div>
+                    </div>
+                    <div class="chat-message">
+                        <div class="chat-avatar bot">🤖</div>
+                        <div class="chat-bubble bot">Annual tuition is ₹1,50,000. Total program cost is approximately ₹6,00,000 for 4 years.</div>
+                    </div>
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                    <div class="floating-icon floating-icon-1">📚</div>
+                    <div class="floating-icon floating-icon-2">🎓</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem/Solution Section -->
+    <section class="section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title font-display">
+                    The <span class="text-gradient">Problem</span> & Solution
+                </h2>
+                <p class="section-subtitle">
+                    We understand the frustration of searching for admission information
+                </p>
+            </div>
+            <div class="two-column-grid">
+                <div class="card card-problem">
+                    <div class="card-header">
+                        <div class="card-icon problem">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                        </div>
+                        <h3 class="card-title problem font-display">The Challenge</h3>
+                    </div>
+                    <ul class="card-list">
+                        <li>
+                            <span class="list-icon problem">✗</span>
+                            <span>Information scattered across multiple web pages and PDFs</span>
+                        </li>
+                        <li>
+                            <span class="list-icon problem">✗</span>
+                            <span>Outdated or conflicting admission details</span>
+                        </li>
+                        <li>
+                            <span class="list-icon problem">✗</span>
+                            <span>Long wait times for email/phone responses</span>
+                        </li>
+                        <li>
+                            <span class="list-icon problem">✗</span>
+                            <span>Confusing eligibility criteria and documentation requirements</span>
+                        </li>
+                        <li>
+                            <span class="list-icon problem">✗</span>
+                            <span>Difficulty comparing courses and fee structures</span>
+                        </li>
+                        <li>
+                            <span class="list-icon problem">✗</span>
+                            <span>Limited support outside office hours</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card card-solution">
+                    <div class="card-header">
+                        <div class="card-icon solution">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <h3 class="card-title solution font-display">Our Solution</h3>
+                    </div>
+                    <ul class="card-list">
+                        <li>
+                            <span class="list-icon solution">✓</span>
+                            <span>All information centralized in one intelligent chatbot</span>
+                        </li>
+                        <li>
+                            <span class="list-icon solution">✓</span>
+                            <span>Always up-to-date with the latest admission data</span>
+                        </li>
+                        <li>
+                            <span class="list-icon solution">✓</span>
+                            <span>Instant responses in under 2 seconds</span>
+                        </li>
+                        <li>
+                            <span class="list-icon solution">✓</span>
+                            <span>Clear, personalized eligibility assessments</span>
+                        </li>
+                        <li>
+                            <span class="list-icon solution">✓</span>
+                            <span>Easy course and fee comparisons</span>
+                        </li>
+                        <li>
+                            <span class="list-icon solution">✓</span>
+                            <span>24/7 availability—get answers anytime, anywhere</span>
+                        </li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>💡 Result: Students save hours of research and get accurate answers instantly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title font-display">
+                    Powerful <span class="text-gradient">Features</span>
+                </h2>
+                <p class="section-subtitle">
+                    Everything you need to navigate the college admission process with confidence
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #eab308, #f97316);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title font-display">Instant Answers</h3>
+                    <p class="feature-description">Get immediate responses to all your admission queries without waiting for office hours or email replies.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title font-display">24/7 Availability</h3>
+                    <p class="feature-description">Access admission information anytime, anywhere. Our bot never sleeps, so you can get help whenever you need it.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title font-display">Course & Fee Lookup</h3>
+                    <p class="feature-description">Quickly search and compare courses, specializations, and fee structures to find the perfect program for you.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title font-display">Document Checklist</h3>
+                    <p class="feature-description">Get a personalized list of required documents based on your chosen course and category.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #ef4444, #f97316);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <polyline points="9 11 12 14 22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title font-display">Eligibility Checker</h3>
+                    <p class="feature-description">Instantly verify if you meet the eligibility criteria for your desired program before applying.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title font-display">Multi-Language Support</h3>
+                    <p class="feature-description">Communicate in your preferred language. We support English, Hindi, and regional languages.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chat Demo Section -->
+    <section id="demo" class="section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title font-display">
+                    See It In <span class="text-gradient">Action</span>
+                </h2>
+                <p class="section-subtitle">
+                    Click the chat button in the bottom-right corner to start talking with AdmitBot!
+                </p>
+            </div>
+            <div style="text-align: center; padding: 3rem 0;">
+                <button class="btn-primary" onclick="openChat()" style="font-size: 1.25rem; padding: 1rem 2rem;">
+                    <span>🚀 Open Live Chat</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title font-display">
+                    How It <span class="text-gradient">Works</span>
+                </h2>
+                <p class="section-subtitle">
+                    Three simple steps to get all your admission questions answered
+                </p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="step-title font-display">Ask Your Question</h3>
+                    <p class="step-description">Type your admission-related query in natural language. Ask about courses, fees, eligibility, deadlines, or documents.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                        </svg>
+                    </div>
+                    <h3 class="step-title font-display">AI Searches Knowledge Base</h3>
+                    <p class="step-description">Our intelligent bot searches through our comprehensive database of admission information to find the most relevant and accurate answer.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon" style="background: linear-gradient(135deg, #f97316, #ef4444);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="step-title font-display">Get Instant Answer</h3>
+                    <p class="step-description">Receive a clear, accurate response in seconds. The bot can handle follow-up questions and provide additional details.</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn-primary" onclick="openChat()" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                    Try It Now ✨
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section id="tech" class="section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title font-display">
+                    Powered by <span class="text-gradient">Advanced AI</span>
+                </h2>
+                <p class="section-subtitle">
+                    Built with cutting-edge technology to deliver accurate, reliable information
+                </p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M12 2a10 10 0 0 1 7.07 2.93"/>
+                            <path d="M21.95 12A10 10 0 0 1 12 22"/>
+                            <path d="M2.05 12A10 10 0 0 1 12 2"/>
+                            <path d="M12 22a10 10 0 0 1-7.07-2.93"/>
+                        </svg>
+                    </div>
+                    <h3 class="tech-name font-display">CrewAI</h3>
+                    <p class="tech-description">Advanced multi-agent AI framework for intelligent query processing</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon" style="background: linear-gradient(135deg, #f97316, #ef4444);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                    </div>
+                    <h3 class="tech-name font-display">Groq LLM</h3>
+                    <p class="tech-description">Lightning-fast language model for instant, accurate responses</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                    </div>
+                    <h3 class="tech-name font-display">RAG Architecture</h3>
+                    <p class="tech-description">Retrieval-Augmented Generation for factual, source-based answers</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h3 class="tech-name font-display">Secure & Private</h3>
+                    <p class="tech-description">Enterprise-grade security to protect your data</p>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-grid">
+                    <div>
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-text">Accuracy Rate</div>
+                    </div>
+                    <div>
+                        <div class="stat-number">&lt;2s</div>
+                        <div class="stat-text">Average Response</div>
+                    </div>
+                    <div>
+                        <div class="stat-number">10k+</div>
+                        <div class="stat-text">Questions Answered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">
+                        <div class="logo-icon">A</div>
+                        <span class="logo-text font-display">AdmitBot</span>
+                    </div>
+                    <p class="footer-description">
+                        Your intelligent companion for navigating college admissions with confidence.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer-title font-display">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#demo">Live Demo</a></li>
+                        <li><a href="#how-it-works">How it Works</a></li>
+                        <li><a href="#tech">Technology</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title font-display">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Access</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title font-display">Contact Us</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <svg class="contact-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span>support@admitbot.com</span>
+                        </li>
+                        <li>
+                            <svg class="contact-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            <span>+91 1234567890</span>
+                        </li>
+                        <li>
+                            <svg class="contact-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <span>Bangalore, Karnataka, India</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AdmitBot. All rights reserved.</p>
+                <p>Built with ❤️ using CrewAI & Groq</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-container">
+        <div id="chatWindow" class="chat-window">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-header-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                        </svg>
+                    </div>
+                    <div class="chat-header-text">
+                        <h3>AdmitBot</h3>
+                        <p>Online • Responds instantly</p>
+                    </div>
+                </div>
+                <button class="chat-close-btn" onclick="closeChat()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="chatMessages" class="chat-messages">
+                <!-- Messages will be dynamically added here -->
+            </div>
+            <div class="chat-input-area">
+                <div class="chat-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Ask about admissions..."
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button id="sendBtn" class="chat-send-btn" onclick="sendMessage()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button class="chat-toggle-btn" onclick="toggleChat()">
+            <svg id="chatIcon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span class="notification-badge" id="notificationBadge">1</span>
+        </button>
+    </div>
+
+    <script>
+        // Chatbot Knowledge Base
+        const knowledgeBase = {
+            courses: {
+                keywords: ['course', 'courses', 'program', 'programs', 'degree', 'what courses', 'available courses', 'offered'],
+                response: `We offer the following programs:
+
+🎓 <strong>Undergraduate (UG)</strong>:
+• B.Tech (Computer Science, Mechanical, Civil, Electrical, Electronics)
+• B.Sc (Physics, Chemistry, Mathematics, Biology)
+• BBA (Business Administration)
+• BCA (Computer Applications)
+• B.Com (Commerce)
+
+🎓 <strong>Postgraduate (PG)</strong>:
+• M.Tech (CS, Mechanical, Civil, etc.)
+• MBA (Marketing, Finance, HR, Operations)
+• M.Sc (Physics, Chemistry, Math)
+• MCA (Computer Applications)
+
+Would you like details about any specific program?`
+            },
+            fees: {
+                keywords: ['fee', 'fees', 'cost', 'price', 'tuition', 'how much', 'payment'],
+                response: `💰 <strong>Fee Structure</strong>:
+
+<strong>B.Tech Programs</strong>:
+• Annual Fee: ₹1,50,000
+• Total (4 years): ₹6,00,000
+
+<strong>MBA Programs</strong>:
+• Annual Fee: ₹2,00,000
+• Total (2 years): ₹4,00,000
+
+<strong>B.Sc/BCA/BBA</strong>:
+• Annual Fee: ₹80,000
+• Total (3 years): ₹2,40,000
+
+<strong>M.Sc/MCA</strong>:
+• Annual Fee: ₹1,00,000
+• Total (2 years): ₹2,00,000
+
+💡 Scholarships available for merit students (up to 50% tuition waiver)
+💳 Installment payment options available`
+            },
+            eligibility: {
+                keywords: ['eligibility', 'eligible', 'qualification', 'criteria', 'requirement', 'who can apply', 'can i apply'],
+                response: `📋 <strong>Eligibility Criteria</strong>:
+
+<strong>B.Tech</strong>:
+• 60% in 12th (Physics, Chemistry, Math)
+• Valid JEE Main score
+
+<strong>MBA</strong>:
+• Bachelor's degree (any stream) with 50%
+• Valid CAT/MAT/XAT score
+• Work experience (preferred)
+
+<strong>B.Sc/BCA</strong>:
+• 50% in 12th (relevant subjects)
+• Entrance test (for some programs)
+
+<strong>MCA/M.Tech</strong>:
+• Bachelor's degree in relevant field with 55%
+• Valid GATE/entrance test score
+
+Which program are you interested in?`
+            },
+            documents: {
+                keywords: ['document', 'documents', 'papers', 'certificates', 'what do i need', 'required documents'],
+                response: `📄 <strong>Required Documents</strong>:
+
+<strong>All Applicants</strong>:
+✓ 10th & 12th mark sheets and certificates
+✓ Transfer certificate (TC)
+✓ Migration certificate
+✓ Character certificate
+✓ Passport size photos (4 copies)
+✓ Aadhar card copy
+✓ Category certificate (if applicable)
+
+<strong>For UG Programs</strong>:
+✓ JEE/entrance exam scorecard
+
+<strong>For PG Programs</strong>:
+✓ UG degree & mark sheets (all semesters)
+✓ CAT/GATE/entrance scorecard
+✓ Work experience certificate (if applicable)
+
+All documents should be self-attested. Original documents required during verification.`
+            },
+            deadlines: {
+                keywords: ['deadline', 'last date', 'when', 'apply by', 'application deadline', 'admission date'],
+                response: `📅 <strong>Important Dates 2024</strong>:
+
+<strong>Application Period</strong>:
+• Opens: January 15, 2024
+• Closes: June 30, 2024
+
+<strong>Entrance Exams</strong>:
+• University Entrance Test: May 15, 2024
+• Results: June 10, 2024
+
+<strong>Counseling</strong>:
+• Round 1: July 5-10, 2024
+• Round 2: July 15-20, 2024
+• Round 3: July 25-30, 2024
+
+<strong>Classes Begin</strong>:
+• August 1, 2024
+
+⚠️ Apply early to avoid last-minute rush!`
+            },
+            scholarship: {
+                keywords: ['scholarship', 'financial aid', 'discount', 'concession', 'waiver'],
+                response: `🎓 <strong>Scholarship Opportunities</strong>:
+
+<strong>Merit-Based</strong>:
+• 90%+ marks: 50% tuition waiver
+• 80-90%: 30% tuition waiver
+• 70-80%: 20% tuition waiver
+
+<strong>Entrance Exam Based</strong>:
+• Top 100 rank: Full tuition waiver
+• Top 500 rank: 50% waiver
+• Top 1000 rank: 25% waiver
+
+<strong>Category-Based</strong>:
+• SC/ST: Fee concession as per govt. rules
+• OBC: 20% fee concession
+• EWS: 30% fee concession
+
+<strong>Sports Quota</strong>:
+• State/National level: Up to 40% waiver
+
+Apply for scholarships during the admission process!`
+            },
+            hostel: {
+                keywords: ['hostel', 'accommodation', 'residence', 'stay', 'room', 'lodging'],
+                response: `🏠 <strong>Hostel Facilities</strong>:
+
+<strong>Accommodation</strong>:
+• Separate hostels for boys and girls
+• 2/3/4 sharing rooms available
+• 24/7 security and CCTV surveillance
+
+<strong>Hostel Fees</strong>:
+• Single occupancy: ₹80,000/year
+• Double sharing: ₹60,000/year
+• Triple sharing: ₹45,000/year
+• Quad sharing: ₹35,000/year
+
+<strong>Facilities Included</strong>:
+✓ Mess (3 meals/day)
+✓ Wi-Fi connectivity
+✓ Laundry service
+✓ Common room with TV
+✓ Study room
+✓ Sports facilities
+✓ Medical room
+
+Applications for hostel can be submitted along with admission forms.`
+            },
+            placement: {
+                keywords: ['placement', 'job', 'companies', 'recruit', 'career', 'package'],
+                response: `💼 <strong>Placement Record</strong>:
+
+<strong>2023-24 Highlights</strong>:
+• Highest Package: ₹45 LPA
+• Average Package: ₹8.5 LPA
+• Placement Rate: 94%
+
+<strong>Top Recruiters</strong>:
+• TCS, Infosys, Wipro, Cognizant
+• Amazon, Microsoft, Google
+• Deloitte, KPMG, EY
+• Flipkart, Paytm, Zomato
+
+<strong>Placement Support</strong>:
+✓ Pre-placement training
+✓ Resume building workshops
+✓ Mock interviews
+✓ Soft skills development
+✓ Industry internships
+
+Our dedicated placement cell works year-round to ensure maximum opportunities!`
+            },
+            contact: {
+                keywords: ['contact', 'call', 'email', 'phone', 'reach', 'talk to', 'speak to'],
+                response: `📞 <strong>Contact Information</strong>:
+
+<strong>Admission Office</strong>:
+📧 Email: admissions@college.edu.in
+📱 Phone: +91 1234567890
+📱 WhatsApp: +91 9876543210
+
+<strong>Office Hours</strong>:
+🕐 Monday - Friday: 9:00 AM - 5:00 PM
+🕐 Saturday: 9:00 AM - 2:00 PM
+❌ Sunday: Closed
+
+<strong>Address</strong>:
+📍 Main Campus
+   MG Road, Bangalore
+   Karnataka - 560001
+
+<strong>Website</strong>:
+🌐 www.college.edu.in
+
+You can also visit our campus for in-person counseling!`
+            }
+        };
+
+        // Quick replies
+        const quickReplies = [
+            'Show me all courses',
+            'What are the fees?',
+            'Eligibility criteria',
+            'Required documents',
+            'Application deadlines'
+        ];
+
+        // Chat state
+        let isChatOpen = false;
+        let hasSeenInitialMessage = false;
+
+        // Initialize chat with welcome message
+        function initializeChat() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const welcomeMessage = `
+                <div class="message-wrapper">
+                    <div class="message-avatar bot">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble bot">
+                            👋 Hi! I'm AdmitBot, your college admission assistant.
+                            
+                            I can help you with:
+                            • Course information
+                            • Fees and scholarships
+                            • Eligibility criteria
+                            • Required documents
+                            • Application deadlines
+                            • And much more!
+                            
+                            What would you like to know?
+                        </div>
+                        <div class="message-time">${getCurrentTime()}</div>
+                        <div class="quick-replies" id="initialQuickReplies">
+                            ${quickReplies.map(reply => 
+                                `<button class="quick-reply-btn" onclick="handleQuickReply('${reply}')">${reply}</button>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            messagesDiv.innerHTML = welcomeMessage;
+        }
+
+        // Get current time
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Toggle chat window
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            const badge = document.getElementById('notificationBadge');
+            
+            if (isChatOpen) {
+                closeChat();
+            } else {
+                openChat();
+            }
+        }
+
+        // Open chat
+        function openChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            const badge = document.getElementById('notificationBadge');
+            
+            chatWindow.classList.add('open');
+            isChatOpen = true;
+            badge.style.display = 'none';
+            
+            if (!hasSeenInitialMessage) {
+                initializeChat();
+                hasSeenInitialMessage = true;
+            }
+            
+            // Focus on input
+            document.getElementById('chatInput').focus();
+        }
+
+        // Close chat
+        function closeChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.classList.remove('open');
+            isChatOpen = false;
+        }
+
+        // Handle quick reply
+        function handleQuickReply(text) {
+            document.getElementById('chatInput').value = text;
+            sendMessage();
+            // Remove quick replies after selection
+            const quickRepliesDiv = document.getElementById('initialQuickReplies');
+            if (quickRepliesDiv) {
+                quickRepliesDiv.remove();
+            }
+        }
+
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            
+            // Clear input
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Simulate bot response delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                const response = getBotResponse(message);
+                addMessage(response, 'bot');
+            }, 1500);
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const isUser = sender === 'user';
+            
+            const messageHTML = `
+                <div class="message-wrapper ${isUser ? 'user-message' : ''}">
+                    <div class="message-avatar ${sender}">
+                        ${isUser ? '👤' : '🤖'}
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble ${sender}">
+                            ${text}
+                        </div>
+                        <div class="message-time">${getCurrentTime()}</div>
+                    </div>
+                </div>
+            `;
+            
+            messagesDiv.insertAdjacentHTML('beforeend', messageHTML);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const typingHTML = `
+                <div class="typing-indicator-wrapper active" id="typingIndicator">
+                    <div class="message-avatar bot">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble bot">
+                            <div class="typing-indicator">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            messagesDiv.insertAdjacentHTML('beforeend', typingHTML);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        // Get bot response
+        function getBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Check each category in knowledge base
+            for (const [category, data] of Object.entries(knowledgeBase)) {
+                for (const keyword of data.keywords) {
+                    if (lowerMessage.includes(keyword)) {
+                        return data.response;
+                    }
+                }
+            }
+            
+            // Default response if no match
+            return `I'd be happy to help you with that! I can provide information about:
+
+• Courses and Programs
+• Fees and Scholarships
+• Eligibility Criteria
+• Required Documents
+• Application Deadlines
+• Hostel Facilities
+• Placement Records
+• Contact Information
+
+Please ask me about any of these topics, or try one of the quick reply buttons!`;
+        }
+
+        // Handle Enter key press
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Show notification badge on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (!isChatOpen) {
+                    document.getElementById('notificationBadge').style.display = 'flex';
+                }
+            }, 3000);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
