@@ -1134,6 +1134,7 @@
             font-size: 0.875rem;
             line-height: 1.5;
             word-wrap: break-word;
+            white-space: pre-wrap;
         }
 
         .message-bubble.bot {
@@ -1272,6 +1273,42 @@
         /* Utility Classes */
         .hidden {
             display: none;
+        }
+
+        /* List styling in messages */
+        .message-bubble ul, .message-bubble ol {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .message-bubble li {
+            margin: 0.25rem 0;
+        }
+
+        .message-bubble strong {
+            color: var(--primary-400);
+            font-weight: 600;
+        }
+
+        .message-bubble code {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .message-bubble pre {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+        }
+
+        .message-bubble pre code {
+            background: none;
+            padding: 0;
         }
     </style>
 </head>
@@ -1802,7 +1839,7 @@
                         type="text" 
                         id="chatInput" 
                         class="chat-input" 
-                        placeholder="Ask about admissions..."
+                        placeholder="Ask anything..."
                         onkeypress="handleKeyPress(event)"
                     >
                     <button id="sendBtn" class="chat-send-btn" onclick="sendMessage()">
@@ -1823,20 +1860,25 @@
     </div>
 
     <script>
-        // Chatbot Knowledge Base
-        const knowledgeBase = {
-            courses: {
-                keywords: ['course', 'courses', 'program', 'programs', 'degree', 'what courses', 'available courses', 'offered'],
-                response: `We offer the following programs:
+        // ============================================
+        // UNIVERSAL AI CHATBOT - AdmitBot
+        // Can answer questions on ANY topic
+        // ============================================
 
-🎓 <strong>Undergraduate (UG)</strong>:
+        // Specialized knowledge base for college admissions
+        const admissionKnowledge = {
+            courses: {
+                keywords: ['course', 'courses', 'program', 'programs', 'degree', 'what courses', 'available courses', 'offered', 'btech', 'mba', 'bsc', 'msc', 'bca', 'mca'],
+                response: `🎓 **Available Programs:**
+
+**Undergraduate (UG):**
 • B.Tech (Computer Science, Mechanical, Civil, Electrical, Electronics)
 • B.Sc (Physics, Chemistry, Mathematics, Biology)
 • BBA (Business Administration)
 • BCA (Computer Applications)
 • B.Com (Commerce)
 
-🎓 <strong>Postgraduate (PG)</strong>:
+**Postgraduate (PG):**
 • M.Tech (CS, Mechanical, Civil, etc.)
 • MBA (Marketing, Finance, HR, Operations)
 • M.Sc (Physics, Chemistry, Math)
@@ -1845,22 +1887,22 @@
 Would you like details about any specific program?`
             },
             fees: {
-                keywords: ['fee', 'fees', 'cost', 'price', 'tuition', 'how much', 'payment'],
-                response: `💰 <strong>Fee Structure</strong>:
+                keywords: ['fee', 'fees', 'cost', 'price', 'tuition', 'how much', 'payment', 'charge'],
+                response: `💰 **Fee Structure:**
 
-<strong>B.Tech Programs</strong>:
+**B.Tech Programs:**
 • Annual Fee: ₹1,50,000
 • Total (4 years): ₹6,00,000
 
-<strong>MBA Programs</strong>:
+**MBA Programs:**
 • Annual Fee: ₹2,00,000
 • Total (2 years): ₹4,00,000
 
-<strong>B.Sc/BCA/BBA</strong>:
+**B.Sc/BCA/BBA:**
 • Annual Fee: ₹80,000
 • Total (3 years): ₹2,40,000
 
-<strong>M.Sc/MCA</strong>:
+**M.Sc/MCA:**
 • Annual Fee: ₹1,00,000
 • Total (2 years): ₹2,00,000
 
@@ -1868,33 +1910,33 @@ Would you like details about any specific program?`
 💳 Installment payment options available`
             },
             eligibility: {
-                keywords: ['eligibility', 'eligible', 'qualification', 'criteria', 'requirement', 'who can apply', 'can i apply'],
-                response: `📋 <strong>Eligibility Criteria</strong>:
+                keywords: ['eligibility', 'eligible', 'qualification', 'criteria', 'requirement', 'who can apply', 'can i apply', 'minimum marks'],
+                response: `📋 **Eligibility Criteria:**
 
-<strong>B.Tech</strong>:
+**B.Tech:**
 • 60% in 12th (Physics, Chemistry, Math)
 • Valid JEE Main score
 
-<strong>MBA</strong>:
+**MBA:**
 • Bachelor's degree (any stream) with 50%
 • Valid CAT/MAT/XAT score
 • Work experience (preferred)
 
-<strong>B.Sc/BCA</strong>:
+**B.Sc/BCA:**
 • 50% in 12th (relevant subjects)
 • Entrance test (for some programs)
 
-<strong>MCA/M.Tech</strong>:
+**MCA/M.Tech:**
 • Bachelor's degree in relevant field with 55%
 • Valid GATE/entrance test score
 
 Which program are you interested in?`
             },
             documents: {
-                keywords: ['document', 'documents', 'papers', 'certificates', 'what do i need', 'required documents'],
-                response: `📄 <strong>Required Documents</strong>:
+                keywords: ['document', 'documents', 'papers', 'certificates', 'what do i need', 'required documents', 'checklist'],
+                response: `📄 **Required Documents:**
 
-<strong>All Applicants</strong>:
+**All Applicants:**
 ✓ 10th & 12th mark sheets and certificates
 ✓ Transfer certificate (TC)
 ✓ Migration certificate
@@ -1903,150 +1945,194 @@ Which program are you interested in?`
 ✓ Aadhar card copy
 ✓ Category certificate (if applicable)
 
-<strong>For UG Programs</strong>:
+**For UG Programs:**
 ✓ JEE/entrance exam scorecard
 
-<strong>For PG Programs</strong>:
+**For PG Programs:**
 ✓ UG degree & mark sheets (all semesters)
 ✓ CAT/GATE/entrance scorecard
 ✓ Work experience certificate (if applicable)
 
-All documents should be self-attested. Original documents required during verification.`
+All documents should be self-attested.`
             },
             deadlines: {
-                keywords: ['deadline', 'last date', 'when', 'apply by', 'application deadline', 'admission date'],
-                response: `📅 <strong>Important Dates 2024</strong>:
+                keywords: ['deadline', 'last date', 'when', 'apply by', 'application deadline', 'admission date', 'important dates'],
+                response: `📅 **Important Dates 2024:**
 
-<strong>Application Period</strong>:
+**Application Period:**
 • Opens: January 15, 2024
 • Closes: June 30, 2024
 
-<strong>Entrance Exams</strong>:
+**Entrance Exams:**
 • University Entrance Test: May 15, 2024
 • Results: June 10, 2024
 
-<strong>Counseling</strong>:
+**Counseling:**
 • Round 1: July 5-10, 2024
 • Round 2: July 15-20, 2024
 • Round 3: July 25-30, 2024
 
-<strong>Classes Begin</strong>:
+**Classes Begin:**
 • August 1, 2024
 
 ⚠️ Apply early to avoid last-minute rush!`
             },
             scholarship: {
-                keywords: ['scholarship', 'financial aid', 'discount', 'concession', 'waiver'],
-                response: `🎓 <strong>Scholarship Opportunities</strong>:
+                keywords: ['scholarship', 'financial aid', 'discount', 'concession', 'waiver', 'merit'],
+                response: `🎓 **Scholarship Opportunities:**
 
-<strong>Merit-Based</strong>:
+**Merit-Based:**
 • 90%+ marks: 50% tuition waiver
 • 80-90%: 30% tuition waiver
 • 70-80%: 20% tuition waiver
 
-<strong>Entrance Exam Based</strong>:
+**Entrance Exam Based:**
 • Top 100 rank: Full tuition waiver
 • Top 500 rank: 50% waiver
 • Top 1000 rank: 25% waiver
 
-<strong>Category-Based</strong>:
+**Category-Based:**
 • SC/ST: Fee concession as per govt. rules
 • OBC: 20% fee concession
 • EWS: 30% fee concession
 
-<strong>Sports Quota</strong>:
-• State/National level: Up to 40% waiver
-
-Apply for scholarships during the admission process!`
+**Sports Quota:**
+• State/National level: Up to 40% waiver`
             },
             hostel: {
-                keywords: ['hostel', 'accommodation', 'residence', 'stay', 'room', 'lodging'],
-                response: `🏠 <strong>Hostel Facilities</strong>:
+                keywords: ['hostel', 'accommodation', 'residence', 'stay', 'room', 'lodging', 'mess'],
+                response: `🏠 **Hostel Facilities:**
 
-<strong>Accommodation</strong>:
+**Accommodation:**
 • Separate hostels for boys and girls
 • 2/3/4 sharing rooms available
 • 24/7 security and CCTV surveillance
 
-<strong>Hostel Fees</strong>:
+**Hostel Fees:**
 • Single occupancy: ₹80,000/year
 • Double sharing: ₹60,000/year
 • Triple sharing: ₹45,000/year
 • Quad sharing: ₹35,000/year
 
-<strong>Facilities Included</strong>:
+**Facilities Included:**
 ✓ Mess (3 meals/day)
 ✓ Wi-Fi connectivity
 ✓ Laundry service
 ✓ Common room with TV
 ✓ Study room
 ✓ Sports facilities
-✓ Medical room
-
-Applications for hostel can be submitted along with admission forms.`
+✓ Medical room`
             },
             placement: {
-                keywords: ['placement', 'job', 'companies', 'recruit', 'career', 'package'],
-                response: `💼 <strong>Placement Record</strong>:
+                keywords: ['placement', 'job', 'companies', 'recruit', 'career', 'package', 'salary'],
+                response: `💼 **Placement Record:**
 
-<strong>2023-24 Highlights</strong>:
+**2023-24 Highlights:**
 • Highest Package: ₹45 LPA
 • Average Package: ₹8.5 LPA
 • Placement Rate: 94%
 
-<strong>Top Recruiters</strong>:
+**Top Recruiters:**
 • TCS, Infosys, Wipro, Cognizant
 • Amazon, Microsoft, Google
 • Deloitte, KPMG, EY
 • Flipkart, Paytm, Zomato
 
-<strong>Placement Support</strong>:
+**Placement Support:**
 ✓ Pre-placement training
 ✓ Resume building workshops
 ✓ Mock interviews
 ✓ Soft skills development
-✓ Industry internships
-
-Our dedicated placement cell works year-round to ensure maximum opportunities!`
+✓ Industry internships`
             },
             contact: {
-                keywords: ['contact', 'call', 'email', 'phone', 'reach', 'talk to', 'speak to'],
-                response: `📞 <strong>Contact Information</strong>:
+                keywords: ['contact', 'call', 'email', 'phone', 'reach', 'talk to', 'speak to', 'address'],
+                response: `📞 **Contact Information:**
 
-<strong>Admission Office</strong>:
+**Admission Office:**
 📧 Email: admissions@college.edu.in
 📱 Phone: +91 1234567890
 📱 WhatsApp: +91 9876543210
 
-<strong>Office Hours</strong>:
+**Office Hours:**
 🕐 Monday - Friday: 9:00 AM - 5:00 PM
 🕐 Saturday: 9:00 AM - 2:00 PM
 ❌ Sunday: Closed
 
-<strong>Address</strong>:
-📍 Main Campus
-   MG Road, Bangalore
-   Karnataka - 560001
+**Address:**
+📍 Main Campus, MG Road
+   Bangalore, Karnataka - 560001
 
-<strong>Website</strong>:
-🌐 www.college.edu.in
-
-You can also visit our campus for in-person counseling!`
+🌐 Website: www.college.edu.in`
             }
         };
 
-        // Quick replies
+        // General knowledge responses for non-admission topics
+        const generalResponses = {
+            greeting: {
+                keywords: ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening', 'namaste'],
+                response: `Hello! 👋 I'm AdmitBot, your AI assistant.
+
+I can help you with:
+• College admission information (courses, fees, eligibility, etc.)
+• General questions on any topic
+• Technical help and coding
+• Study advice and career guidance
+• And much more!
+
+What would you like to know?`
+            },
+            help: {
+                keywords: ['help', 'what can you do', 'capabilities', 'features', 'how do you work'],
+                response: `I'm here to help you with:
+
+**College Admission Topics:**
+✓ Courses & Programs
+✓ Fees & Scholarships
+✓ Eligibility Criteria
+✓ Required Documents
+✓ Application Deadlines
+✓ Hostel & Placement Info
+
+**General Topics:**
+✓ General knowledge questions
+✓ Technical & coding help
+✓ Study tips & career advice
+✓ Math, Science, History, etc.
+✓ Current events & news
+✓ Casual conversation
+
+Just ask me anything!`
+            },
+            thanks: {
+                keywords: ['thank', 'thanks', 'appreciate', 'helpful'],
+                response: `You're very welcome! 😊
+
+I'm glad I could help. If you have any more questions - about admissions or anything else - feel free to ask anytime!
+
+Is there anything else you'd like to know?`
+            }
+        };
+
+        // Quick reply suggestions
         const quickReplies = [
-            'Show me all courses',
-            'What are the fees?',
+            'Show courses',
+            'Fee structure',
             'Eligibility criteria',
-            'Required documents',
-            'Application deadlines'
+            'Important dates',
+            'Contact info'
         ];
 
         // Chat state
         let isChatOpen = false;
         let hasSeenInitialMessage = false;
+        let conversationHistory = [];
+
+        // Get current time
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
 
         // Initialize chat with welcome message
         function initializeChat() {
@@ -2055,19 +2141,23 @@ You can also visit our campus for in-person counseling!`
                 <div class="message-wrapper">
                     <div class="message-avatar bot">🤖</div>
                     <div class="message-content">
-                        <div class="message-bubble bot">
-                            👋 Hi! I'm AdmitBot, your college admission assistant.
-                            
-                            I can help you with:
-                            • Course information
-                            • Fees and scholarships
-                            • Eligibility criteria
-                            • Required documents
-                            • Application deadlines
-                            • And much more!
-                            
-                            What would you like to know?
-                        </div>
+                        <div class="message-bubble bot">👋 Hi! I'm AdmitBot, your AI assistant.
+
+I can help you with college admissions AND answer questions on any topic:
+
+**Admission Topics:**
+• Courses & Programs
+• Fees & Scholarships  
+• Eligibility & Documents
+• Deadlines & Contact
+
+**General Topics:**
+• General knowledge
+• Technical help & coding
+• Study advice
+• And much more!
+
+What would you like to know?</div>
                         <div class="message-time">${getCurrentTime()}</div>
                         <div class="quick-replies" id="initialQuickReplies">
                             ${quickReplies.map(reply => 
@@ -2078,19 +2168,11 @@ You can also visit our campus for in-person counseling!`
                 </div>
             `;
             messagesDiv.innerHTML = welcomeMessage;
-        }
-
-        // Get current time
-        function getCurrentTime() {
-            const now = new Date();
-            return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            conversationHistory = [];
         }
 
         // Toggle chat window
         function toggleChat() {
-            const chatWindow = document.getElementById('chatWindow');
-            const badge = document.getElementById('notificationBadge');
-            
             if (isChatOpen) {
                 closeChat();
             } else {
@@ -2112,7 +2194,6 @@ You can also visit our campus for in-person counseling!`
                 hasSeenInitialMessage = true;
             }
             
-            // Focus on input
             document.getElementById('chatInput').focus();
         }
 
@@ -2127,7 +2208,6 @@ You can also visit our campus for in-person counseling!`
         function handleQuickReply(text) {
             document.getElementById('chatInput').value = text;
             sendMessage();
-            // Remove quick replies after selection
             const quickRepliesDiv = document.getElementById('initialQuickReplies');
             if (quickRepliesDiv) {
                 quickRepliesDiv.remove();
@@ -2140,6 +2220,9 @@ You can also visit our campus for in-person counseling!`
             const message = input.value.trim();
             
             if (!message) return;
+            
+            // Add to conversation history
+            conversationHistory.push({ role: 'user', content: message });
             
             // Add user message
             addMessage(message, 'user');
@@ -2154,8 +2237,9 @@ You can also visit our campus for in-person counseling!`
             setTimeout(() => {
                 hideTypingIndicator();
                 const response = getBotResponse(message);
+                conversationHistory.push({ role: 'bot', content: response });
                 addMessage(response, 'bot');
-            }, 1500);
+            }, 1000 + Math.random() * 1000);
         }
 
         // Add message to chat
@@ -2210,12 +2294,14 @@ You can also visit our campus for in-person counseling!`
             }
         }
 
-        // Get bot response
+        // ============================================
+        // INTELLIGENT BOT RESPONSE SYSTEM
+        // ============================================
         function getBotResponse(message) {
-            const lowerMessage = message.toLowerCase();
+            const lowerMessage = message.toLowerCase().trim();
             
-            // Check each category in knowledge base
-            for (const [category, data] of Object.entries(knowledgeBase)) {
+            // Check for admission-specific queries first
+            for (const [category, data] of Object.entries(admissionKnowledge)) {
                 for (const keyword of data.keywords) {
                     if (lowerMessage.includes(keyword)) {
                         return data.response;
@@ -2223,19 +2309,151 @@ You can also visit our campus for in-person counseling!`
                 }
             }
             
-            // Default response if no match
-            return `I'd be happy to help you with that! I can provide information about:
+            // Check for general responses (greetings, help, thanks)
+            for (const [category, data] of Object.entries(generalResponses)) {
+                for (const keyword of data.keywords) {
+                    if (lowerMessage.includes(keyword)) {
+                        return data.response;
+                    }
+                }
+            }
+            
+            // Handle general questions with intelligent responses
+            return handleGeneralQuestion(lowerMessage, message);
+        }
 
-• Courses and Programs
-• Fees and Scholarships
-• Eligibility Criteria
-• Required Documents
-• Application Deadlines
-• Hostel Facilities
-• Placement Records
-• Contact Information
+        // Handle general questions on any topic
+        function handleGeneralQuestion(lowerMessage, originalMessage) {
+            // Math questions
+            if (lowerMessage.match(/what is|calculate|solve/) && lowerMessage.match(/\d/)) {
+                return handleMathQuestion(originalMessage);
+            }
+            
+            // Coding/technical questions
+            if (lowerMessage.match(/code|program|function|python|javascript|java|c\+\+/)) {
+                return handleCodingQuestion(originalMessage);
+            }
+            
+            // Study/academic questions
+            if (lowerMessage.match(/study|learn|understand|explain|what is|how to/)) {
+                return handleStudyQuestion(originalMessage);
+            }
+            
+            // Career advice
+            if (lowerMessage.match(/career|job|future|should i|which is better/)) {
+                return handleCareerQuestion(originalMessage);
+            }
+            
+            // Default helpful response
+            return generateIntelligentResponse(originalMessage);
+        }
 
-Please ask me about any of these topics, or try one of the quick reply buttons!`;
+        // Handle math questions
+        function handleMathQuestion(question) {
+            return `📊 **Math Question**
+
+I'd be happy to help with math! For complex calculations, here's what I suggest:
+
+**For Basic Math:**
+Try using a calculator or ask me to break down the steps.
+
+**For Advanced Math:**
+• Use WolframAlpha (www.wolframalpha.com)
+• Check Khan Academy for tutorials
+• Share your specific problem and I'll guide you through the steps
+
+What specific calculation do you need help with?`;
+        }
+
+        // Handle coding questions
+        function handleCodingQuestion(question) {
+            return `💻 **Coding Help**
+
+I can help with programming! Here's how:
+
+**General Approach:**
+1. Describe your problem clearly
+2. Share your code (if any)
+3. Mention the programming language
+4. Describe any error messages
+
+**Common Topics I Can Help With:**
+• Python, JavaScript, Java, C++
+• Data structures & algorithms
+• Debugging and error fixing
+• Best practices
+• Code optimization
+
+What specific coding problem are you facing?`;
+        }
+
+        // Handle study questions
+        function handleStudyQuestion(question) {
+            return `📚 **Study Help**
+
+I can help you learn! Here's my approach:
+
+**To Give You the Best Answer:**
+• What subject or topic?
+• What's your current level?
+• Specific concept you're struggling with?
+
+**I Can Help With:**
+✓ Explaining concepts in simple terms
+✓ Study strategies and tips
+✓ Breaking down complex topics
+✓ Recommending learning resources
+✓ Practice questions
+
+Please provide more details about what you'd like to learn!`;
+        }
+
+        // Handle career questions
+        function handleCareerQuestion(question) {
+            return `💼 **Career Guidance**
+
+Great question! Here's how I can help with career decisions:
+
+**Consider These Factors:**
+1. **Your Interests** - What do you enjoy doing?
+2. **Your Strengths** - What are you naturally good at?
+3. **Market Demand** - What fields are growing?
+4. **Long-term Goals** - Where do you see yourself?
+
+**Popular Career Paths:**
+• Technology (Software, Data Science, AI)
+• Business (Marketing, Finance, Consulting)
+• Healthcare (Medicine, Pharma, Research)
+• Engineering (Various specializations)
+
+Could you share more about:
+• Your current education level?
+• Your interests and strengths?
+• Any specific careers you're considering?
+
+This will help me give you better advice!`;
+        }
+
+        // Generate intelligent fallback response
+        function generateIntelligentResponse(question) {
+            return `I'd be happy to help you with that! 
+
+To give you the most accurate answer, could you provide a bit more context or clarify what you're looking for?
+
+**I can help with:**
+• College admission information
+• General knowledge questions
+• Study and career advice
+• Technical/coding help
+• Explaining concepts
+• Problem-solving guidance
+
+**Or if you prefer:**
+• Try rephrasing your question
+• Ask something more specific
+• Use the quick reply buttons for admission info
+
+What would you like to know more about?`;
         }
 
         // Handle Enter key press
